@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Android-HW-16.2</string>
+    <string name="hint_enter_phone_number">Enter phone number</string>
+    <string name="hint_enter_message">Enter the message</string>
+    <string name="btn_call">Call</string>
+    <string name="btn_send_message">Send message</string>
+</resources>
