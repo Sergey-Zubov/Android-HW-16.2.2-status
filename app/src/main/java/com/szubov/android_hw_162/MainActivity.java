@@ -5,7 +5,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import android.Manifest;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -20,8 +24,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private EditText mEditTextMessage;
     private String mPhoneNumber;
     private static final String LOG_TAG = "MyLog";
-    private static final int MY_PERMISSIONS_REQUEST_CALL_PHONE = 11;
-    private static final int MY_PERMISSIONS_REQUEST_SEND_MESSAGE = 12;
+    protected static final int SENT = 0;
+    protected static final int DELIVERED = 1;
+    protected static final int MY_PERMISSIONS_REQUEST_CALL_PHONE = 11;
+    protected static final int MY_PERMISSIONS_REQUEST_SEND_MESSAGE = 12;
+    protected static final String NUMBER = "number";
+    protected static final String STATUS = "status";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,8 +81,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void callByNumber() {
         Log.d(LOG_TAG, "MainActivity -> btnCall -> OnClick -> callByNumber");
         mPhoneNumber = mEditTextPhoneNumber.getText().toString().trim();
-        Intent intentCall = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + mPhoneNumber));
         if (mPhoneNumber.length() > 0) {
+            Intent intentCall = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + mPhoneNumber));
             if (intentCall.resolveActivity(getPackageManager()) != null) {
                 startActivity(intentCall);
             } else {
@@ -91,12 +99,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (message.length() > 0) {
             mPhoneNumber = mEditTextPhoneNumber.getText().toString().trim();
             if (mPhoneNumber.length() > 0) {
+                PendingIntent piSent = addSentIntent(mPhoneNumber);
+                PendingIntent piDelivered = addDeliveredIntent(mPhoneNumber);
                 try {
                     SmsManager smgr = SmsManager.getDefault();
                     smgr.sendTextMessage(mPhoneNumber,null,
-                            message, null, null);
-                    Toast.makeText(MainActivity.this, R.string.message_is_sent,
-                            Toast.LENGTH_LONG).show();
+                            message, piSent, piDelivered);
+                    //Toast.makeText(MainActivity.this, R.string.message_is_sent,
+                            //Toast.LENGTH_LONG).show();
                 } catch (Exception ex) {
                     Log.e(LOG_TAG, "MainActivity -> BtnSendMessage -> SmsManager",ex);
                     ex.printStackTrace();
@@ -108,6 +118,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Toast.makeText(MainActivity.this, R.string.message_is_empty,
                     Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private PendingIntent addSentIntent(String number) {
+        Intent sentIntent = new Intent("in.wptrafficanalyzer.activity.status.sent");
+        sentIntent.putExtra(NUMBER, number);
+        sentIntent.putExtra(NUMBER, SENT);
+        return PendingIntent.getActivity(getBaseContext(), 0 ,
+                sentIntent, PendingIntent.FLAG_ONE_SHOT);
+    }
+
+    private PendingIntent addDeliveredIntent(String number) {
+        Intent deliveredIntent = new Intent("in.wptrafficanalyzer.activity.status.delivered");
+        deliveredIntent.putExtra(NUMBER, number);
+        deliveredIntent.putExtra(STATUS, DELIVERED);
+        return PendingIntent.getActivity(getBaseContext(), 0 ,
+                deliveredIntent, PendingIntent.FLAG_ONE_SHOT);
     }
 
     private void toastPhoneNumber() {

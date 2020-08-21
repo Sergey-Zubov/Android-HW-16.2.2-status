@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Android-HW-16.2</string>
+    <string name="main_activity_name">Call or Send</string>
+    <string name="sms_status_class_name">Sms status</string>
     <string name="hint_enter_phone_number">Enter phone number</string>
     <string name="hint_enter_message">Enter the message</string>
     <string name="btn_call">Call</string>
