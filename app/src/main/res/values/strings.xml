@@ -4,4 +4,7 @@
     <string name="hint_enter_message">Enter the message</string>
     <string name="btn_call">Call</string>
     <string name="btn_send_message">Send message</string>
+    <string name="message_is_sent">The message is sent</string>
+    <string name="message_is_empty">Enter message!</string>
+    <string name="phone_is_empty">Enter phone number!</string>
 </resources>
