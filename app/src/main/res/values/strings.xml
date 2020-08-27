@@ -9,4 +9,5 @@
     <string name="message_is_sent">The message is sent</string>
     <string name="message_is_empty">Enter message!</string>
     <string name="phone_is_empty">Enter phone number!</string>
+    <string name="device_doesnt_have_app_for_call">Your device doesn\'t have the necessary app to make a call</string>
 </resources>

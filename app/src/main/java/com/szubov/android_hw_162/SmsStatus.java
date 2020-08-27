@@ -9,6 +9,7 @@ public class SmsStatus extends MainActivity {
         super.onCreate(savedInstanceState);
 
         Bundle data = getIntent().getExtras();
+        assert data != null;
         int status = data.getInt(STATUS);
         String number = data.getString(NUMBER);
         if (status == MainActivity.SENT) {

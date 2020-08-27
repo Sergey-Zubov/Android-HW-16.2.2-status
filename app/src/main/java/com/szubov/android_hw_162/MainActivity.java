@@ -87,6 +87,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(intentCall);
             } else {
                 Log.d(LOG_TAG, "Activity not found");
+                Toast.makeText(MainActivity.this, R.string.device_doesnt_have_app_for_call,
+                        Toast.LENGTH_LONG).show();
             }
         } else {
             toastPhoneNumber();
@@ -100,11 +102,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mPhoneNumber = mEditTextPhoneNumber.getText().toString().trim();
             if (mPhoneNumber.length() > 0) {
                 PendingIntent piSent = addSentIntent(mPhoneNumber);
-                PendingIntent piDelivered = addDeliveredIntent(mPhoneNumber);
+                //PendingIntent piDelivered = addDeliveredIntent(mPhoneNumber);
                 try {
                     SmsManager smgr = SmsManager.getDefault();
                     smgr.sendTextMessage(mPhoneNumber,null,
-                            message, piSent, piDelivered);
+                            message, piSent, null); //piDelivered);
                     //Toast.makeText(MainActivity.this, R.string.message_is_sent,
                             //Toast.LENGTH_LONG).show();
                 } catch (Exception ex) {
@@ -123,7 +125,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private PendingIntent addSentIntent(String number) {
         Intent sentIntent = new Intent("in.wptrafficanalyzer.activity.status.sent");
         sentIntent.putExtra(NUMBER, number);
-        sentIntent.putExtra(NUMBER, SENT);
+        sentIntent.putExtra(STATUS, SENT);
         return PendingIntent.getActivity(getBaseContext(), 0 ,
                 sentIntent, PendingIntent.FLAG_ONE_SHOT);
     }
